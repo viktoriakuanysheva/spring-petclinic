@@ -11,16 +11,14 @@ pipeline {
             }
             steps {
                 echo 'Building..'
-                sh 'mvn -f ./SmallestSpringApp/pom.xml clean package'
-                stash includes: 'SmallestSpringApp/target/*', name: 'app'
+                sh 'mvn clean package'
+                stash includes: 'target/*', name: 'app'
             }
         }
         stage('Build image') {
             agent any
             steps {
                 unstash 'app'
-                // sh 'cd SmallestSpringApp/target'
-                sh 'ls'
                 sh 'docker build -t victoriakuanysheva/petclinic:${BUILD_NUMBER} .'
                 sh 'docker tag victoriakuanysheva/petclinic:${BUILD_NUMBER} victoriakuanysheva/petclinic:latest'
             }
